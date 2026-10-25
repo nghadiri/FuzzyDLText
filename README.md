@@ -64,7 +64,19 @@ On test data the individual models reach about 80.3-81.1% accuracy, the Choquet 
 
 If you use this work, please cite:
 
-Ghadiri, Nasser, Ali Ghadiri, and Afrooz Sheikholeslami. "A Fuzzy Deep Learning Approach to Health-Related Text Classification." In *Intelligent and Fuzzy Systems (INFUS 2021)*, Lecture Notes in Networks and Systems 308, pp. 179-186. Springer, Cham, 2022. https://doi.org/10.1007/978-3-030-85577-2_21
+```bibtex
+@inproceedings{ghadiri2022fuzzy,
+  title     = {A Fuzzy Deep Learning Approach to Health-Related Text Classification},
+  author    = {Ghadiri, Nasser and Ghadiri, Ali and Sheikholeslami, Afrooz},
+  booktitle = {Intelligent and Fuzzy Systems (INFUS 2021)},
+  series    = {Lecture Notes in Networks and Systems},
+  volume    = {308},
+  pages     = {179--186},
+  publisher = {Springer, Cham},
+  year      = {2022},
+  doi       = {10.1007/978-3-030-85577-2_21}
+}
+```
 
 [Paper](https://link.springer.com/chapter/10.1007/978-3-030-85577-2_21) |
 [Data](https://github.com/lopezbec/COVID19_Tweets_Dataset)
