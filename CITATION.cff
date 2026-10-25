@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the associated paper."
+title: "Fuzzy Fusion of Deep Learning based Text Classification"
+type: software
+authors:
+  - family-names: Ghadiri
+    given-names: Nasser
+  - family-names: Ghadiri
+    given-names: Ali
+  - family-names: Sheikholeslami
+    given-names: Afrooz
+preferred-citation:
+  type: article
+  title: "A Fuzzy Deep Learning Approach to Health-Related Text Classification"
+  authors:
+    - family-names: Ghadiri
+      given-names: Nasser
+    - family-names: Ghadiri
+      given-names: Ali
+    - family-names: Sheikholeslami
+      given-names: Afrooz
+  collection-title: "Intelligent and Fuzzy Systems: INFUS 2021"
+  collection-type: proceedings
+  volume: 308
+  start: 179
+  end: 186
+  year: 2022
+  publisher:
+    name: Springer
+  doi: "10.1007/978-3-030-85577-2_21"
+license: MIT
