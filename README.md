@@ -7,9 +7,24 @@ Three fine-tuned transformer classifiers (BERT, RoBERTa, Covid-Twitter-BERT) are
 1. **Fuzzy Choquet integral**: a per-class fuzzy-measure aggregation of the three classifiers' scores.
 2. **Fuzzy rule-based fusion**: a fuzzy inference system that sets the weight of each classifier per tweet, based on tweet length and Covid-relatedness.
 
-> This repository accompanies the published paper cited below. The paper itself is © Springer Nature and is **not** included here; see [Citation](#citation) and [Copyright and attribution](#copyright-and-attribution).
+In the paper's evaluation, both fusion methods beat each individual model on test accuracy, with the rule-based fusion best at 82.0% against 80.3-81.1% for the single models.
 
-## Workflow at a glance
+This repository holds the Colab notebooks that implement the pipeline (`src/`) and a short guide to the method (`docs/`).
+
+> Fuzzy logic background: [Wikipedia](https://en.wikipedia.org/wiki/Fuzzy_logic)
+
+## Why it is different
+
+| Idea | What it buys you |
+|---|---|
+| **Fuzzy fusion of pre-trained models.** A tweet can belong *to some degree* to the set of "Covid-related" tweets and *to some degree* to the set of "long" tweets. | Graded membership replaces picking a single model or taking hard votes. |
+| **Meta-data driven weighting.** Two cheap tweet-level signals (length, Jaccard similarity to Covid keywords) set each model's weight. | Trust shifts toward CT-BERT for highly Covid-related tweets and toward RoBERTa for longer ones. |
+| **Interpretable fusion layer.** The rule base is a small set of human-readable IF-THEN rules. | Unlike a black-box stacking network, you can read why a model was trusted. |
+| **Complementary models.** A general model (BERT), a large robust model (RoBERTa) and a domain-specific model (CT-BERT). | Different kinds of tweets are covered by different models. |
+
+According to the paper, this was the first fuzzy fusion model for health-related social media text. See [docs/how-it-works.md](docs/how-it-works.md) for the details.
+
+## Workflow
 
 ```mermaid
 flowchart LR
@@ -28,14 +43,6 @@ flowchart LR
 
 A more detailed diagram and a step-by-step explanation are in [docs/how-it-works.md](docs/how-it-works.md).
 
-## What is innovative
-
-- **Fuzzy fusion of pre-trained language models.** User-generated text is inherently uncertain: a tweet can belong *to some degree* to the set of "Covid-related" tweets and *to some degree* to the set of "long" tweets. Fuzzy logic expresses this graded membership instead of picking a single model or using hard votes.
-- **Meta-data driven model weighting.** The rule base routes trust between models using two cheap tweet-level signals (length, domain relatedness), e.g. leaning on CT-BERT for highly Covid-related tweets and on RoBERTa for longer ones.
-- **Interpretable fusion layer.** The rule base is a small set of human-readable IF-THEN rules, unlike a black-box stacking network.
-- **Complementary models.** A general model (BERT), a large robust model (RoBERTa) and a domain-specific model (CT-BERT) cover different kinds of tweets.
-- According to the paper, this was the first fuzzy fusion model for health-related social media text.
-
 ## Repository layout
 
 | Path | Contents |
@@ -44,23 +51,23 @@ A more detailed diagram and a step-by-step explanation are in [docs/how-it-works
 | `src/Final_densities_CHi_Sentiment_V7_3class.ipynb` | Same pipeline; Choquet fuzzy measure built from per-model densities (accuracies) |
 | `src/Final_rulebase_Sentiment_V7_3class.ipynb` | Train the 3 classifiers, then fuzzy rule-based fusion |
 | `docs/how-it-works.md` | Method guide, detailed workflow diagram, rule table |
+| `docs/usage.md` | Data preparation, requirements and how to run the notebooks |
 | `CITATION.cff` | Machine-readable citation |
 | `LICENSE` | MIT license for the code and documentation |
 
-The notebooks were written for Google Colab (they mount Google Drive and expect `train.csv`, `valid.csv` and `test.csv` there).
-
 ## Quick start
 
-1. Get tweet IDs from the [COVID-19 Tweets dataset](https://github.com/lopezbec/COVID19_Tweets_Dataset) and hydrate them (the paper used TWARC); labels are positive / negative / neutral.
-2. Create `train.csv`, `valid.csv`, `test.csv` with columns `full_text` and `Sentiment_Label` in your Drive working directory (default `My Drive/SEN_BERT`).
-3. Open a notebook in Colab and run it top to bottom. Each trains BERT, CT-BERT and RoBERTa with 5-fold cross-validation (max length 40, batch size 16, 5 epochs), then runs its fusion step.
-4. The rule-based notebook also needs a `fuzzy_system` package and `word_count` / `jacc_sim` columns in its result file. The Choquet notebooks need the `ChI` module and `cvxopt`.
+Data preparation, requirements and the input file formats are in [docs/usage.md](docs/usage.md). In short:
 
-## Results reported in the paper
+1. Hydrate the tweets from the [COVID-19 Tweets dataset](https://github.com/lopezbec/COVID19_Tweets_Dataset) and put `train.csv`, `valid.csv`, `test.csv` in your Google Drive working directory.
+2. Open one of the notebooks in `src/` in Google Colab and run it top to bottom.
 
-On test data the individual models reach about 80.3-81.1% accuracy, the Choquet fusions 81.4% and 81.6%, and the fuzzy rule-based fusion 82.0%, the best. See the paper for the full evaluation.
+## Paper
 
-## Citation
+Ghadiri, N., Ghadiri, A., Sheikholeslami, A.: *A Fuzzy Deep Learning Approach to Health-Related Text Classification.* In: Intelligent and Fuzzy Systems (INFUS 2021), LNNS 308, pp. 179-186. Springer, Cham (2022).
+[Publisher page](https://link.springer.com/chapter/10.1007/978-3-030-85577-2_21) | [DOI](https://doi.org/10.1007/978-3-030-85577-2_21) | [Data](https://github.com/lopezbec/COVID19_Tweets_Dataset)
+
+The paper contains the full description, experimental setup, tables and figures. The documents here are an independent, shorter guide to the code, not a reproduction of the paper.
 
 If you use this work, please cite:
 
@@ -78,9 +85,9 @@ If you use this work, please cite:
 }
 ```
 
-[Paper](https://link.springer.com/chapter/10.1007/978-3-030-85577-2_21) |
-[Data](https://github.com/lopezbec/COVID19_Tweets_Dataset)
+## License and copyright
 
-## Copyright and attribution
-
-The source code and documentation in this repository are released under the [MIT License](LICENSE). The published paper's text, figures and tables are © the authors / Springer Nature and are not covered by that license; they are not reproduced in this repository. The descriptions here are brief summaries of the method; refer to the published version for full details. Third-party models (BERT, RoBERTa, CT-BERT) and the dataset keep their original licenses.
+- **Code** in this repository is released under the [MIT License](LICENSE).
+- **The published paper** remains under the copyright of its publisher (Springer Nature, 2022). It is not included in this repository, and nothing here reproduces its text, figures or tables. Please use the links above to read it.
+- **The documentation** in this repository is original explanatory text written for this project.
+- **Third-party models and data** (BERT, RoBERTa, CT-BERT and the COVID-19 Tweets dataset) keep their original licenses.
